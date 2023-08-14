@@ -2,3 +2,4 @@ node_modules
 yarn.lock
 config.stencil.json
 secrets.stencil.json
+assets/dist/
