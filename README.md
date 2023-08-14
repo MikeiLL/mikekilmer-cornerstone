@@ -8,6 +8,7 @@ Stencil's Cornerstone theme is the building block for BigCommerce theme develope
 ### Resources
 
 https://developer.bigcommerce.com/stencil-docs/overview
+https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference#jscontext
 
 ### Stencil Utils
 [Stencil-utils](https://github.com/bigcommerce/stencil-utils) is our supporting library for our events and remote interactions.

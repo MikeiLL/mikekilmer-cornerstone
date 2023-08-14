@@ -6,6 +6,7 @@
     data-entity-id="{{id}}"
     data-position="{{position}}"
     data-name="{{name}}"
+    data-alt-images-set="{{#each images}}{{ this.data }}{{/each}}"
     data-product-category="
     {{#each category}}
         {{#if @last}}
@@ -25,7 +26,10 @@
     {{else}}
         {{lang 'common.login_for_pricing'}}
     {{/or}}"
->
+><script>
+  const contextMike = JSON.parse({{jsContext}});
+  console.log(contextMike.catProducts);
+</script>
     <figure class="card-figure">
         {{#if stock_level '===' 0}}
             {{#if theme_settings.pdp_sold_out_label '===' ''}}
