@@ -49,7 +49,6 @@ export default class Category extends CatalogPage {
       this.ariaNotifyNoProducts();
       $('fieldset.actionBar-section').append('<div class="form-field"><button class="button button--secondary" type="button">Add All to Cart</button><span id="items-added"></span></div>').on('click', 'button', (e) => {
         e.preventDefault();
-        console.log("adding to cart");
         // for now just query the DOM for all the product IDs in this page. Not reliable for pagination.
         // Is there really no API feature to add multiple items to the cart?
         const allProductIds = [];
@@ -66,9 +65,9 @@ export default class Category extends CatalogPage {
           data.append('action', 'add');
           data.append('product_id', 118);
           data.append('qty[]', 1);
+          console.log(utils.api.cart);
           utils.api.cart.itemAdd(data, (err, response) => {
             counter++;
-            console.log(err, response);
             if (response.data) {
               if(counter == allProductIds.length) {
                 $('#items-added').text(' ✅');

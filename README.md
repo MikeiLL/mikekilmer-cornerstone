@@ -1,9 +1,23 @@
-# Cornerstone
+# Cornerstone Kilmer
 ![tests](https://github.com/bigcommerce/cornerstone/workflows/Theme%20Bundling%20Test/badge.svg?branch=master)
 
-Stencil's Cornerstone theme is the building block for BigCommerce theme developers to get started quickly developing premium quality themes on the BigCommerce platform.
 
 ## Mike Kilmer Notes
+
+Had [this Big Commerce sandbox store](https://sandbox-test-for-big-bald-guy.mybigcommerce.com) sitting around so using it.
+
+The Stencil CLI tool is quite nice. Read some [Big Commerce Dev](https://developer.bigcommerce.com), [webdav](https://support.bigcommerce.com/s/article/File-Access-WebDAV?language=en_US), [Stencil](https://stenciljs.com/docs/cli), [Moustachejs](https://github.com/janl/mustache.js), [Handlebar Helpers](https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference) [API Guides](https://developer.bigcommerce.com/api-docs/getting-started/about-our-api) [BC Rest](https://developer.bigcommerce.com/docs/rest-storefront) [Headless API access](https://developer.bigcommerce.com/api-docs/storefront/graphql/graphql-api-overview) docs
+
+* read this readme later. whoops.
+* approach to image swap
+* * altImage=images.1.data in card.html (altImage=images.1.data || false NOPE)
+* * {{inject 'catProducts' category.products}} in product-listing.html
+* * Parse error on line 73: ...Image=images.1.data || false (in which file, please?)
+* * animation or transition would be nice
+* always quirks with templating systems
+* Add all to cart
+* * nice aria features
+
 
 ### Resources
 
@@ -139,15 +153,3 @@ with `icon-` prepended. e.g. `xlink:href="#icon-facebook"`.
 
 Simply add your new icon SVG file to the icons folder, and run `grunt svgstore`,
 or just `grunt`.
-
-#### License
-
-(The MIT License)
-Copyright (C) 2015-present BigCommerce Inc.
-All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
