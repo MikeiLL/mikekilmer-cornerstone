@@ -3,3 +3,4 @@ yarn.lock
 config.stencil.json
 secrets.stencil.json
 assets/dist/
+notes_and_secrets
