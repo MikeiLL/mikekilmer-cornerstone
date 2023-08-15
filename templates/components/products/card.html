@@ -26,10 +26,7 @@
     {{else}}
         {{lang 'common.login_for_pricing'}}
     {{/or}}"
-><script>
-  const contextMike = JSON.parse({{jsContext}});
-  console.log(contextMike.catProducts);
-</script>
+>
     <figure class="card-figure">
         {{#if stock_level '===' 0}}
             {{#if theme_settings.pdp_sold_out_label '===' ''}}
@@ -68,9 +65,12 @@
            aria-label="{{> components/products/product-info}}"
            data-event-type="product-click"
         >
+        {{ inject 'allImages' images}}
             <div class="card-img-container">
                 {{> components/common/responsive-img
                     image=image
+                    allImages=images
+                    altImage=images.1.data
                     class="card-image"
                     fallback_size=theme_settings.productgallery_size
                     lazyload=theme_settings.lazyload_mode

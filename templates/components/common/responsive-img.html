@@ -47,6 +47,12 @@ There are a few important arguments to know about when using this component:
             This requires no additional network request, so it's fast --}}
     srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
     {{/if}}
+    {{#if allImages.length '>=' '2' }}
+      {{!-- If we have a secondary image to use on hover, include it as an additional srcset --}}
+      data-addtnl-img="{{strReplace allImages.1.data '{:size}' (default fallback_size '160w')}}"
+      onmouseover="this.srcset=this.dataset.addtnlImg"
+      onmouseout="this.srcset=this.dataset.srcset"
+    {{/if}}
 {{/unless}}
 {{!-- If lazyloading is disabled, just use "srcset". If it is not disabled, use "data-srcset" so lazysizes will use
       this after page load --}}

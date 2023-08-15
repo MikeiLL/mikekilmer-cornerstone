@@ -52,6 +52,9 @@ class="category-header-image"
     {{{region name="category_below_content"}}}
   </div>
 </div>
-
+<script>
+  const ctxt = JSON.parse({{jsContext}});
+  console.log(ctxt.allImages.length);
+</script>
 {{/partial}}
 {{> layout/base}}
