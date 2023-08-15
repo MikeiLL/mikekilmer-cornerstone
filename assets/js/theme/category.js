@@ -2,6 +2,7 @@ import { hooks } from '@bigcommerce/stencil-utils';
 import CatalogPage from './catalog';
 import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
+import utils from '@bigcommerce/stencil-utils';
 import { createTranslationDictionary } from '../theme/common/utils/translations-utils';
 
 export default class Category extends CatalogPage {
@@ -45,7 +46,39 @@ export default class Category extends CatalogPage {
 
         $('a.reset-btn').on('click', () => this.setLiveRegionsAttributes($('span.reset-message'), 'status', 'polite'));
 
-        this.ariaNotifyNoProducts();
+      this.ariaNotifyNoProducts();
+      $('fieldset.actionBar-section').append('<div class="form-field"><button class="button button--secondary" type="button">Add All to Cart</button><span id="items-added"></span></div>').on('click', 'button', (e) => {
+        e.preventDefault();
+        console.log("adding to cart");
+        // for now just query the DOM for all the product IDs in this page. Not reliable for pagination.
+        // Is there really no API feature to add multiple items to the cart?
+        const allProductIds = [];
+        $('[data-entity-id]').each((i, el) => {
+          const productId = $(el).data('entity-id');
+          if (productId) {
+            allProductIds.push(productId);
+          }
+        });
+        let counter = 0;
+        allProductIds.map((id) => {
+          // too bad we can't receive a promise from this function
+          const data = new FormData();
+          data.append('action', 'add');
+          data.append('product_id', 118);
+          data.append('qty[]', 1);
+          utils.api.cart.itemAdd(data, (err, response) => {
+            counter++;
+            console.log(err, response);
+            if (response.data) {
+              if(counter == allProductIds.length) {
+                $('#items-added').text(' ✅');
+              }
+            } else {
+              console.log("fail");
+            }
+          }); // end api.cart.itemAdd
+        });
+      });
     }
 
     ariaNotifyNoProducts() {
