@@ -30,6 +30,7 @@ export default class Category extends CatalogPage {
 
     onReady() {
         this.arrangeFocusOnSortBy();
+        this.cartCount();
 
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
 
@@ -47,37 +48,105 @@ export default class Category extends CatalogPage {
         $('a.reset-btn').on('click', () => this.setLiveRegionsAttributes($('span.reset-message'), 'status', 'polite'));
 
       this.ariaNotifyNoProducts();
-      $('fieldset.actionBar-section').append('<div class="form-field"><button class="button button--secondary" type="button">Add All to Cart</button><span id="items-added"></span></div>').on('click', 'button', (e) => {
-        e.preventDefault();
-        // for now just query the DOM for all the product IDs in this page. Not reliable for pagination.
-        // Is there really no API feature to add multiple items to the cart?
-        const allProductIds = [];
+
+      // Mike Kilmer adds following as per Andrew email
+      if (this.context.template === 'pages/custom/category/special-items') {
+        $('form.actionBar').append('<button class="button button--secondary" type="button">Add All to Cart</button>').on('click', 'button', (e) => {
+          e.preventDefault();
+          this.addAllToCart();
+        });
+        $('form.actionBar').after('<span style="background-color: yellow" id="items-added"></span>');
+      }
+    }
+
+    clearCart() {
+      console.log('Clear Cart');
+      fetch('/api/storefront/carts/' + cartId + '/items', {
+          method: 'DELETE',
+          credentials: 'include'
+      }).then(function (response) {
+        return response.json();
+      }).then(function (cartJson) {
+        $('#items-added').html(' ✅ Removed all items from cart');
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+
+    async cartCount() {
+    console.log('Cart Count');
+      fetch('/api/storefront/carts', {
+        credentials: 'include'
+      }).then((response) => {
+        return response.json();
+      }).then((cartJson) => {
+        console.log(this);
+        if (cartJson.length >= 1) {
+          $('form.actionBar').append('<button class="button button--secondary" type="button">Remove All Items</button>').on('click', 'button', (e) => {
+            e.preventDefault();
+            this.clearCart();
+            console.log('Clear Cart');
+          })
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+
+    fetchCartDetails() {
+      console.log('Log Cart');
+          fetch('/api/storefront/carts', {
+            credentials: 'include'
+          }).then((response) => {
+            return response.json();
+          }).then((myJson) => {
+            console.log(myJson);
+          }).catch( (error) => {
+            console.log(error);
+          });
+    }
+
+    addAllToCart() {
+      console.log('Add All to Cart');
+      const lineitems = [];
+        // for now just query the DOM for all the product IDs in this page.
+        // Not reliable for paginated result set.
         $('[data-entity-id]').each((i, el) => {
           const productId = $(el).data('entity-id');
           if (productId) {
-            allProductIds.push(productId);
+            lineitems.push({
+              "quantity": 1,
+              "product_id": productId
+            });
           }
         });
-        let counter = 0;
-        allProductIds.map((id) => {
-          // too bad we can't receive a promise from this function
-          const data = new FormData();
-          data.append('action', 'add');
-          data.append('product_id', 118);
-          data.append('qty[]', 1);
-          console.log(utils.api.cart);
-          utils.api.cart.itemAdd(data, (err, response) => {
-            counter++;
-            if (response.data) {
-              if(counter == allProductIds.length) {
-                $('#items-added').text(' ✅');
-              }
-            } else {
-              console.log("fail");
-            }
-          }); // end api.cart.itemAdd
+      console.log('Add to Cart');
+      fetch('/api/storefront/carts', {
+        credentials: 'include'
+      }).then( (response) => {
+        return response.json();
+      }).then( (cartJson) => {
+        console.log("this: " + this);
+        return cartJson[0].id;
+      }).catch(function (error) {
+        console.log(error);
+      }).then( (cartId) => {
+        return fetch('/api/storefront/carts/' + cartId + '/items', {
+          method: 'POST',
+          credentials: 'include',
+          body: JSON.stringify({
+            "line_items": lineitems
+          })
         });
-      });
+        }).then( (response) => {
+          return response.json();
+        }).then( (cartJson) => {
+          this.fetchCartDetails();
+          $('#items-added').html(' ✅ Added all items to cart');
+        }).catch(function (error) {
+          console.log(error);
+        });
+
     }
 
     ariaNotifyNoProducts() {
