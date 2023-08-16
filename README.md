@@ -6,7 +6,7 @@
 
 I had [this Big Commerce sandbox store](https://sandbox-test-for-big-bald-guy.mybigcommerce.com) sitting around so installed the theme there, with the Special Item in it's category.
 
-The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.bigcommerce.com), [webdav](https://support.bigcommerce.com/s/article/File-Access-WebDAV?language=en_US), [Stencil](https://stenciljs.com/docs/cli), [mustachejs](https://github.com/janl/mustache.js), [Handlebar Helpers](https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference), [API Guides](https://developer.bigcommerce.com/api-docs/getting-started/about-our-api), [BC Rest](https://developer.bigcommerce.com/docs/rest-storefront), [GraphQl with reference to Stencil theme](https://developer.bigcommerce.com/api-docs/storefront/graphql/graphql-api-overview).
+The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.bigcommerce.com), [webdav](https://support.bigcommerce.com/s/article/File-Access-WebDAV?language=en_US), [Stencil](https://stenciljs.com/docs/cli), [mustachejs](https://github.com/janl/mustache.js), [Handlebar Helpers](https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference), [API Guides](https://developer.bigcommerce.com/api-docs/getting-started/about-our-api), [BC Rest](https://developer.bigcommerce.com/docs/rest-storefront), [GraphQl with reference to Stencil theme](https://developer.bigcommerce.com/api-docs/storefront/graphql/graphql-api-overview), [Custom theme](https://developer.bigcommerce.com/stencil-docs/storefront-customization/custom-templates) and finally [Selecting template page from the storefront](https://support.bigcommerce.com/s/article/Stencil-Themes#custom-template).
 
 ### Brief Overview of Test
 
@@ -23,6 +23,7 @@ The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.b
 * Every templating system has it's quirks.
 * Added `onmouseover` and `onmouseout` to swap out the `srcset`, which won't have ancient browser support.
 * Using a second image element and animating the swap would be more elegant.
+* I _think_ it makes sense that this happens globally throughout the theme.
 
 #### Add all to cart
 * Files modified: `assets/js/theme/category.js`.
@@ -66,3 +67,10 @@ The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.b
 * Are `secrets.stencil` and `config.stencil` supposed to be included in the theme directory?
 * Curious that Grunt.js seems to be utilized for SVG compilation, and maybe other assets.
 * * Would expect there's a library available to include in Webpack pipeline.
+* Jest test suite fails on initial/default Cornerstone codebase: `import $ from 'jquery'`...
+* Took an hour to discover that the custom layout mapping from `config.stencil.json` needs to be duplicated via the [store admin deep links portal](http://login.bigcommerce.com/deep-links/products/categories).
+* Would be nice if `stencil push` would update files rather than creating a new theme each time.
+
+## In Closing
+
+This was an insightful little project that perhaps will come into use whether or not our conversation continues. I always enjoy (well, usually) exploring new stacks. Thanks for having me.
