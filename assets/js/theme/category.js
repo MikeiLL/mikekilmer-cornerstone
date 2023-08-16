@@ -3,7 +3,7 @@ import CatalogPage from './catalog';
 import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
 import {createTranslationDictionary} from '../theme/common/utils/translations-utils';
-import { showAlertModal } from './global/modal';
+import {showAlertModal} from './global/modal';
 
 export default class Category extends CatalogPage {
     constructor(context) {
