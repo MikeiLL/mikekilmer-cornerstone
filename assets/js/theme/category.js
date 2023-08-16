@@ -51,107 +51,142 @@ export default class Category extends CatalogPage {
       this.ariaNotifyNoProducts();
 
       // Mike Kilmer adds following as per Andrew email
-      showAlertModal("we have a modal", {
-        icon: 'success' // error, warning, info, success
-      });
 
       if (this.context.template === 'pages/custom/category/special-items') {
-        $('form.actionBar').append('<button class="button button--secondary" type="button">Add All to Cart</button>').on('click', 'button', (e) => {
-          e.preventDefault();
-          this.addAllToCart();
-        });
-        $('form.actionBar').after('<span style="background-color: yellow" id="items-added"></span>');
+        this.addAllButton();
+        this.removeAllButton();
+        // Attach message container next to filter select.
+        $('form.actionBar').after('<div style="background-color: yellow; padding: 0.8em; display: none; margin: 1em auto; max-width: fit-content" id="items-added"></div>');
       }
     }
 
-    clearCart() {
-      console.log('Clear Cart');
-      fetch('/api/storefront/carts/' + cartId + '/items', {
-          method: 'DELETE',
-          credentials: 'include'
-      }).then(function (response) {
-        return response.json();
-      }).then(function (cartJson) {
-        $('#items-added').html(' ✅ Removed all items from cart');
-      }).catch(function (error) {
-        console.log(error);
+    /**
+     * Add All to Cart Button
+     * @return {void}
+     * @todo  Refactor following two functions into one
+     */
+    addAllButton() {
+      const addButton = $('<button class="button button--secondary" type="button">Add All to Cart</button>');
+      addButton.on('click', (e) => {
+        e.preventDefault();
+        this.addAllToCart();
       });
+      $('form.actionBar').append(addButton);
     }
 
-    async cartCount() {
-    console.log('Cart Count');
+    removeAllButton() {
+      const removeButton = $('<button id="removeAll" class="button button--secondary" type="button">Remove All from Cart</button>');
+      removeButton.on('click', (e) => {
+        e.preventDefault();
+        this.clearCart();
+      });
+      removeButton.hide();
+      $('form.actionBar').append(removeButton);
+    }
+
+    async clearCart() {
+      try {
+        const cartId = await this.fetchCartId();
+        if (!cartId) {
+          // no cart to clear
+          return;
+        }
+        const response = await fetch('/api/storefront/carts/' + cartId, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        showAlertModal("Removed all items from cart", {
+          icon: 'info' // error, warning, info, success
+        });
+        $('#removeAll').hide();
+      } catch (error) {
+        console.error(error);
+        showAlertModal("Ooh. Something went wrong: " + error, {
+          icon: 'error' // error, warning, info, success
+        });
+      }
+    }
+
+
+    cartCount() {
       fetch('/api/storefront/carts', {
         credentials: 'include'
       }).then((response) => {
         return response.json();
       }).then((cartJson) => {
-        console.log(this);
         if (cartJson.length >= 1) {
-          $('form.actionBar').append('<button class="button button--secondary" type="button">Remove All Items</button>').on('click', 'button', (e) => {
-            e.preventDefault();
-            this.clearCart();
-            console.log('Clear Cart');
-          })
+          this.removeAllButton();
         }
       }).catch(function (error) {
-        console.log(error);
+        console.error(error);
       });
     }
 
-    fetchCartDetails() {
-      console.log('Log Cart');
-          fetch('/api/storefront/carts', {
-            credentials: 'include'
-          }).then((response) => {
-            return response.json();
-          }).then((myJson) => {
-            console.log(myJson);
-          }).catch( (error) => {
-            console.log(error);
-          });
-    }
-
-    addAllToCart() {
-      console.log('Add All to Cart');
-      const lineitems = [];
-        // for now just query the DOM for all the product IDs in this page.
-        // Not reliable for paginated result set.
-        $('[data-entity-id]').each((i, el) => {
-          const productId = $(el).data('entity-id');
-          if (productId) {
-            lineitems.push({
-              "quantity": 1,
-              "product_id": productId
-            });
-          }
-        });
-      console.log('Add to Cart');
-      fetch('/api/storefront/carts', {
+    /**
+     * Fetch Cart Id
+     * @returns {Promise} cartId || false
+     */
+    fetchCartId() {
+      return fetch('/api/storefront/carts', {
         credentials: 'include'
       }).then( (response) => {
         return response.json();
-      }).then( (cartJson) => {
-        console.log("this: " + this);
+      }).then((cartJson) => {
+        if (cartJson.length < 1 || !cartJson[0].id) {
+          return false;
+        }
         return cartJson[0].id;
       }).catch(function (error) {
-        console.log(error);
-      }).then( (cartId) => {
-        return fetch('/api/storefront/carts/' + cartId + '/items', {
+        console.error(error);
+      });
+    }
+
+    buildLineItems() {
+      const lineitems = [];
+          // for now just query the DOM for all the product IDs in this page.
+          // Not reliable for paginated result set.
+          $('[data-entity-id]').each((i, el) => {
+            const productId = $(el).data('entity-id');
+            if (productId) {
+              lineitems.push({
+                "quantity": 1,
+                "product_id": productId
+              });
+            }
+          });
+      return lineitems;
+    }
+
+    notifyAddedToCart() {
+      $('#items-added').html(' ✅ Added all specialty items to cart').show();
+    }
+
+    // @todo a bit of WET following two functions
+    async addToCart(cartId, lineitems) {
+        const endpoint = cartId ? '/api/storefront/carts/' + cartId + '/items' : '/api/storefront/carts';
+        const response = await fetch(endpoint, {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify({
             "line_items": lineitems
           })
         });
-        }).then( (response) => {
-          return response.json();
-        }).then( (cartJson) => {
-          this.fetchCartDetails();
-          $('#items-added').html(' ✅ Added all items to cart');
-        }).catch(function (error) {
-          console.log(error);
-        });
+        return await response.json();
+      }
 
+    async addAllToCart() {
+      try {
+        const lineitems = this.buildLineItems();
+        const cartId = await this.fetchCartId();
+        await this.addToCart(cartId, lineitems);
+        this.notifyAddedToCart();
+        $('#removeAll').show();
+      } catch (error) {
+        console.error(error);
+        showAlertModal("Ooh. Something went wrong: " + error, {
+          icon: 'error' // error, warning, info, success
+        });
+      }
     }
 
     ariaNotifyNoProducts() {
