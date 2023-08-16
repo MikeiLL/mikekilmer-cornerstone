@@ -2,20 +2,52 @@
 ![tests](https://github.com/bigcommerce/cornerstone/workflows/Theme%20Bundling%20Test/badge.svg?branch=master)
 
 
-## Mike Kilmer Notes
+## Mike Kilmer Notes on the Project
 
-Had [this Big Commerce sandbox store](https://sandbox-test-for-big-bald-guy.mybigcommerce.com) sitting around so using it.
+I had [this Big Commerce sandbox store](https://sandbox-test-for-big-bald-guy.mybigcommerce.com) sitting around so installed the theme there, with the Special Item in it's category.
 
-The Stencil CLI tool is quite nice. Read some [Big Commerce Dev](https://developer.bigcommerce.com), [webdav](https://support.bigcommerce.com/s/article/File-Access-WebDAV?language=en_US), [Stencil](https://stenciljs.com/docs/cli), [Moustachejs](https://github.com/janl/mustache.js), [Handlebar Helpers](https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference) [API Guides](https://developer.bigcommerce.com/api-docs/getting-started/about-our-api) [BC Rest](https://developer.bigcommerce.com/docs/rest-storefront) [Headless API access](https://developer.bigcommerce.com/api-docs/storefront/graphql/graphql-api-overview) docs
+The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.bigcommerce.com), [webdav](https://support.bigcommerce.com/s/article/File-Access-WebDAV?language=en_US), [Stencil](https://stenciljs.com/docs/cli), [Moustachejs](https://github.com/janl/mustache.js), [Handlebar Helpers](https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference) [API Guides](https://developer.bigcommerce.com/api-docs/getting-started/about-our-api) [BC Rest](https://developer.bigcommerce.com/docs/rest-storefront) [Headless API access](https://developer.bigcommerce.com/api-docs/storefront/graphql/graphql-api-overview).
 
-* read this readme later. whoops.
-* approach to image swap
-* * altImage=images.1.data in card.html (altImage=images.1.data || false NOPE)
-* * {{inject 'catProducts' category.products}} in product-listing.html
-* * Parse error on line 73: ...Image=images.1.data || false (in which file, please?)
-* * animation or transition would be nice
-* always quirks with templating systems
-* Add all to cart
+### Brief Overview of Test
+
+* Wish I had read this README sooner! Whoops.
+
+#### The Image Swap
+* Files modified: `components/common/responsive-img.html`, `components/products/card/html`
+* Initially, within from `product-listing.html`, injected the category.products into `jsContext`.
+* Decided on more moustach-centric: adding the alternate image to the image dataset within Moustach template.
+* Noticed that `products/card` component also has `images` in it's scope, so pass those into `responsive-image`
+* Spent some time getting a workable `{{#if }}` in case there's only a single image.
+* * Was hoping for something like `altImage=images.1.data || false`, but no luck.
+* * `Parse error on line 73: ...Image=images.1.data` without telling me which file the error occured in. Arrg.
+* Every templating system has it's quirks.
+* Added `onmouseover` and `onmouseout` to swap out the `srcset`, which won't have old browser support
+* Using a second image element and animating the swap would be more elegant.
+
+#### Add all to cart
+* Files modified: `assets/js/theme/category.js`
+* Well, first I worked up a version using multiple calls to `utils.api.cart.itemAdd`
+* * (and was annoyed there wasn't a method to add multiple items to the cart)
+* Then looked back at the specification to utilize the Storefront API.
+* * This confused me at first as I'm used to seeing those requests from a server.
+* * Am curious how Stencil achieves the requests and imagine it proxies through the back end.
+* I expect there's an easy way to get all products from a specific category, but for now just grabbing from DOM.
+* Then loop through and build up an object to use to update the cart.
+* If there isn't a cart, create one; if there is, add to it.
+
+#### Remove All from cart
+* Files modified: `assets/js/theme/category.js`
+* The spec just said to empty the cart if there's at least one thing in it, so, simple.
+
+#### User Feedback on both of the above
+* Shortcut for rest of site with `this.context.template === 'pages/custom/category/special-items'`
+* * Expect might be more elegant to subclass `Category` class and load it into one of my custom template pages.
+
+
+#### Logged In User Details Banner
+* Files modified: `templates/components/common/navigation.html`
+
+
 * * nice aria features
 
 
