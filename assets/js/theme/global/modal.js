@@ -313,11 +313,17 @@ export function showAlertModal(message, options = {}) {
 
     modal.open();
     modal.$modal.find('.alert-icon').hide();
-
+    console.log('icon', icon);
     if (icon === 'error') {
-        modal.$modal.find('.error-icon').show();
+      modal.$modal.find('.error-icon').show();
     } else if (icon === 'warning') {
-        modal.$modal.find('.warning-icon').show();
+      modal.$modal.find('.warning-icon').show();
+    } else if (icon === 'info') {
+      console.log(modal.$modal);
+      modal.$modal.find('.info-icon').show();
+    } else if (icon === 'success') {
+      console.log('success');
+      modal.$modal.find('.success-icon').show();
     }
 
     modal.updateContent(`<span>${message}</span>`);

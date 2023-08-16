@@ -3,7 +3,8 @@ import CatalogPage from './catalog';
 import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
 import utils from '@bigcommerce/stencil-utils';
-import { createTranslationDictionary } from '../theme/common/utils/translations-utils';
+import {createTranslationDictionary} from '../theme/common/utils/translations-utils';
+import { showAlertModal } from './global/modal';
 
 export default class Category extends CatalogPage {
     constructor(context) {
@@ -50,6 +51,10 @@ export default class Category extends CatalogPage {
       this.ariaNotifyNoProducts();
 
       // Mike Kilmer adds following as per Andrew email
+      showAlertModal("we have a modal", {
+        icon: 'success' // error, warning, info, success
+      });
+
       if (this.context.template === 'pages/custom/category/special-items') {
         $('form.actionBar').append('<button class="button button--secondary" type="button">Add All to Cart</button>').on('click', 'button', (e) => {
           e.preventDefault();
