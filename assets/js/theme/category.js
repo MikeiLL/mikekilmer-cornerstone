@@ -55,7 +55,7 @@ export default class Category extends CatalogPage {
         this.addAllButton();
         this.removeAllButton();
         // Attach message container next to filter select.
-        $('form.actionBar').after('<div style="background-color: yellow; padding: 0.8em; display: none; margin: 1em auto; max-width: fit-content" id="items-added"></div>');
+        $('form.actionBar').after('<div style="background-color: yellow; padding: 0.8em; display: none; margin: 1em auto; max-width: fit-content" id="itemsAdded"></div>');
       }
     }
 
@@ -97,6 +97,7 @@ export default class Category extends CatalogPage {
         showAlertModal("Removed all items from cart", {
           icon: 'info' // error, warning, info, success
         });
+        $('#itemsAdded').hide();
         $('#removeAll').hide();
       } catch (error) {
         console.error(error);
@@ -157,7 +158,7 @@ export default class Category extends CatalogPage {
     }
 
     notifyAddedToCart() {
-      $('#items-added').html(' ✅ Added all specialty items to cart').show();
+      $('#itemsAdded').html(' ✅ Added all specialty items to cart').show();
     }
 
     // @todo a bit of WET following two functions
