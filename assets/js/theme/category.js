@@ -2,7 +2,6 @@ import { hooks } from '@bigcommerce/stencil-utils';
 import CatalogPage from './catalog';
 import compareProducts from './global/compare-products';
 import FacetedSearch from './common/faceted-search';
-import utils from '@bigcommerce/stencil-utils';
 import {createTranslationDictionary} from '../theme/common/utils/translations-utils';
 import { showAlertModal } from './global/modal';
 
