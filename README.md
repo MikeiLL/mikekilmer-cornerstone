@@ -70,6 +70,7 @@ The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.b
 * Jest test suite fails on initial/default Cornerstone codebase: `import $ from 'jquery'`...
 * Took an hour to discover that the custom layout mapping from `config.stencil.json` needs to be duplicated via the [store admin deep links portal](http://login.bigcommerce.com/deep-links/products/categories).
 * Would be nice if `stencil push` would update files rather than creating a new theme each time.
+* Gotcha: make sure to select "Stencil Cli" as type for Oauth token.
 
 ## In Closing
 
