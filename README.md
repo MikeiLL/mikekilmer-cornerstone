@@ -6,14 +6,14 @@
 
 I had [this Big Commerce sandbox store](https://sandbox-test-for-big-bald-guy.mybigcommerce.com) sitting around so installed the theme there, with the Special Item in it's category.
 
-The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.bigcommerce.com), [webdav](https://support.bigcommerce.com/s/article/File-Access-WebDAV?language=en_US), [Stencil](https://stenciljs.com/docs/cli), [Moustachejs](https://github.com/janl/mustache.js), [Handlebar Helpers](https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference) [API Guides](https://developer.bigcommerce.com/api-docs/getting-started/about-our-api) [BC Rest](https://developer.bigcommerce.com/docs/rest-storefront) [Headless API access](https://developer.bigcommerce.com/api-docs/storefront/graphql/graphql-api-overview).
+The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.bigcommerce.com), [webdav](https://support.bigcommerce.com/s/article/File-Access-WebDAV?language=en_US), [Stencil](https://stenciljs.com/docs/cli), [mustachejs](https://github.com/janl/mustache.js), [Handlebar Helpers](https://developer.bigcommerce.com/stencil-docs/reference-docs/handlebars-helpers-reference) [API Guides](https://developer.bigcommerce.com/api-docs/getting-started/about-our-api) [BC Rest](https://developer.bigcommerce.com/docs/rest-storefront) [GraphQl with reference to Stencil theme](https://developer.bigcommerce.com/api-docs/storefront/graphql/graphql-api-overview).
 
 ### Brief Overview of Test
 
 * Wish I had read this README sooner! Whoops.
 
 #### The Image Swap
-* Files modified: `components/common/responsive-img.html`, `components/products/card/html`
+* Files modified: `components/common/responsive-img.html`, `components/products/card/html`.
 * Initially, within from `product-listing.html`, injected the category.products into `jsContext`.
 * Decided on more moustach-centric: adding the alternate image to the image dataset within Moustach template.
 * Noticed that `products/card` component also has `images` in it's scope, so pass those into `responsive-image`
@@ -25,7 +25,7 @@ The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.b
 * Using a second image element and animating the swap would be more elegant.
 
 #### Add all to cart
-* Files modified: `assets/js/theme/category.js`
+* Files modified: `assets/js/theme/category.js`.
 * Well, first I worked up a version using multiple calls to `utils.api.cart.itemAdd`
 * * (and was annoyed there wasn't a method to add multiple items to the cart)
 * Then looked back at the specification to utilize the Storefront API.
@@ -36,19 +36,27 @@ The Stencil CLI is sweet. Read some docs: [Big Commerce Dev](https://developer.b
 * If there isn't a cart, create one; if there is, add to it.
 
 #### Remove All from cart
-* Files modified: `assets/js/theme/category.js`
+* Files modified: `assets/js/theme/category.js`.
 * The spec just said to empty the cart if there's at least one thing in it, so, simple.
 
-#### User Feedback on both of the above
-* Shortcut for rest of site with `this.context.template === 'pages/custom/category/special-items'`
+#### User Buttons and Feedback for both of the above
+* Shortcut for rest of site with `this.context.template === 'pages/custom/category/special-items'`.
 * * Expect might be more elegant to subclass `Category` class and load it into one of my custom template pages.
+* Append one or two buttons and a notification area to (and after) the `$('form.actionBar')`.
+* Noticed the theme has a Modal.js, which, perhaps, would be a preferable alternative.
+* Spent minimal time on U/X and styling.
 
 
 #### Logged In User Details Banner
-* Files modified: `templates/components/common/navigation.html`
+* Files modified: `templates/components/common/header.html`.
+* Again, comparing template `{{#if template '==' 'pages/custom/category/special-items'}}`
+* Took about ten (okay probably 20) minutes, now that I (kind of) get mustache.js.
+* `{{#if customer}}` then `{{ customer.name }}` etc...
+* Added an svg icon because it was "free".
 
-
-* * nice aria features
+## Comments and Questions about the theme and toolset
+* Nice aria features. Glad accessibility is a priority for BC
+* Are `secrets.stencil` and `config.stencil` supposed to be included in the theme directory?
 
 
 ### Resources

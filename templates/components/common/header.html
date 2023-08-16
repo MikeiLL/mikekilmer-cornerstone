@@ -14,6 +14,20 @@
     <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu">
         <span class="mobileMenu-toggleIcon">Toggle menu</span>
     </a>
+    {{#if template '==' 'pages/custom/category/special-items'}}
+      {{#if customer}}
+      <div style="display: flex; align-items: center; justify-content: center; margin-right: 10px; background-color:aqua; padding: 1em;">
+        <span class="icon icon--ratingFull">
+          <svg>
+              <use href="#icon-star" />
+          </svg>
+      </span> &nbsp; <b>{{ customer.name }}</b>
+        &nbsp; <span>{{ customer.email }}</span>
+        &nbsp; <span>{{ customer.phone }}</span>
+        &nbsp; <span> Store Credit: {{ customer.store_credit.formatted }}
+      </div>
+      {{/if}}
+    {{/if}}
     {{> components/common/navigation}}
 
     {{#if page_type '===' 'default'}}
